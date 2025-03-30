@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cubo Interactivo - AR</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Cubo básico con interactividad -->
+        <a-box position="0 1.5 -3" rotation="0 45 45" color="tomato" shadow 
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
+        id="interactive-cube"></a-box>
+
+        <!-- Mensaje reutilizable -->
+        <a-text value="" position="0 0.5 -3" color="black" 
+        background="color: white" visible="false" id="definition-message"></a-text>
+    </a-scene>
+
+    <!-- Botones para controlar las definiciones y funciones -->
+    <div style="position: absolute; top: 10px; left: 10px;">
+        <button id="area-button">Definición de Área</button>
+        <button id="volume-button">Definición de Volumen</button>
+        <button id="toggle-animation">Detener/Reiniciar Animación</button>
+        <button id="zoom-in">Zoom In</button>
+        <button id="zoom-out">Zoom Out</button>
+    </div>
+
+    <script>
+        // Capturar elementos
+        const cube = document.querySelector('#interactive-cube');
+        const message = document.querySelector('#definition-message');
+        const areaButton = document.querySelector('#area-button');
+        const volumeButton = document.querySelector('#volume-button');
+        const toggleAnimationButton = document.querySelector('#toggle-animation');
+        const zoomInButton = document.querySelector('#zoom-in');
+        const zoomOutButton = document.querySelector('#zoom-out');
+        let isAnimating = true; // Estado inicial de la animación
+
+        // Mostrar definición de área de un cuadrado
+        areaButton.addEventListener('click', () => {
+            message.setAttribute('value', 'Area de un cuadrado: lado^2.\nEs la medida de la superficie de una de sus caras.');
+            message.setAttribute('visible', true); // Mostrar el mensaje
+        });
+
+        // Mostrar definición de volumen de un cubo
+        volumeButton.addEventListener('click', () => {
+            message.setAttribute('value', 'Volumen de un cubo: lado^3.\nEs el espacio que ocupa.');
+            message.setAttribute('visible', true); // Mostrar el mensaje
+        });
+
+        // Alternar animación (detener/reiniciar)
+        toggleAnimationButton.addEventListener('click', () => {
+            if (isAnimating) {
+                cube.removeAttribute('animation'); // Detener animación
+                isAnimating = false;
+            } else {
+                cube.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 3000'); // Reiniciar animación
+                isAnimating = true;
+            }
+        });
+
+        // Hacer zoom in
+        zoomInButton.addEventListener('click', () => {
+            const currentScale = cube.getAttribute('scale') || {x: 1, y: 1, z: 1}; // Escala actual
+            cube.setAttribute('scale', {x: currentScale.x + 0.2, y: currentScale.y + 0.2, z: currentScale.z + 0.2}); // Incrementar escala
+        });
+
+        // Hacer zoom out
+        zoomOutButton.addEventListener('click', () => {
+            const currentScale = cube.getAttribute('scale') || {x: 1, y: 1, z: 1}; // Escala actual
+            cube.setAttribute('scale', {x: Math.max(currentScale.x - 0.2, 0.1), y: Math.max(currentScale.y - 0.2, 0.1), z: Math.max(currentScale.z - 0.2, 0.1)}); // Reducir escala (mínimo 0.1)
+        });
+    </script>
+</body>
+</html>
